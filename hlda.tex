@@ -1,0 +1,48 @@
+\documentclass{article}
+
+\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage[toc, page, titletoc]{appendix}
+\usepackage[T1]{fontenc}
+\usepackage{pdfpages}
+\usepackage{fullpage}
+\usepackage[usenames, dvipsnames]{color}
+\usepackage{hyperref}
+
+
+\usepackage{xspace}
+\newcommand{\nest}{{\sc NEST}\xspace}
+
+
+\setcounter{tocdepth}{1}
+
+
+%% Coloration syntaxique de code:
+
+\hypersetup
+{
+  colorlinks = true,
+  urlcolor= blue,
+  linkcolor= Black,
+  citecolor = Black
+}
+
+\bibliographystyle{unsrt}
+
+\title{State of the art:\\Heteroscedastic Linear Discriminant Analysis.}
+\author{Thomas Badie \and Gary Perelman \and Pierre Parutto}
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+\include{src/introduction}
+\include{src/definitions}
+\include{src/results}
+\include{src/conclusions}
+
+
+\bibliography{biblio}
+
+\end{document}

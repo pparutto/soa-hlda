@@ -1,0 +1,9 @@
+*.aux
+*.log
+*.pdf
+*.bbl
+*.toc
+*.blg
+*.out
+*latexmk
+auto
