@@ -65,7 +65,7 @@ with:
   \item $w$ the projection matrix
 \end{itemize*}
 
-The expressions of $S_B$ and $S_W$ for the multiclass LDA are:
+Welling\cite{welling} demonstrates that the expressions of $S_B$ and $S_W$ for the multiclass LDA are:
 $$S_B = \frac{1}{C} * \sum\limits_{i = 1}^C (\mu_i - \mu)(\mu_i - \mu)^t$$
 $$S_W = \frac{1}{C} * \sum\limits_{i = 1}^C \sum\limits_{\forall x \in C_i} (x - \mu_i)(x - \mu_i)^t$$
 With:
@@ -77,7 +77,7 @@ With:
 For a multiclass LDA, the best projection matrix for the ith dimension satisfy the equation:
 $$(S_B - \lambda_i S_W)w_{i}^* = 0$$
 
-This means that the projections with the maximum class separability information are the eigenvectors corresponding to the largest eigenvalues of $S_{W}^{-1} S_B$.
+Gutierrez-Osuna\cite{gutierrez.osuna} explains that the projections with the maximum class separability information are the eigenvectors corresponding to the largest eigenvalues of $S_{W}^{-1} S_B$.
 
 \subsection{HLDA}
 
@@ -128,11 +128,11 @@ Where $\mu_0$ and $\Sigma_0$ are supposed to be common to all classes.
 
 Based on those definition, it is possible to define a model representing the new dataset.
 
-\subsubsection{HLDA gaussian Model}
+\subsubsection{HLDA Gaussian Model}
 
 The Gaussian probability density function for this model is:
 $$P(y_i) = \frac{\mid \theta \mid}{\sqrt{(2\pi)^n \mid \Sigma_{g(i)} \mid}}
-    e^{-\frac{1}{2} (y_i - \mu_{g(i)})^t \Sigma_{g(i)}^{-1} (y_i - \mu_{g(i)})}$$
+e^{-\frac{1}{2} (y_i - \mu_{g(i)})^t \Sigma_{g(i)}^{-1} (y_i - \mu_{g(i)})}$$
 With $g(i)$ the function associating each sample with its label.
 
 The variables of the model are:
@@ -143,21 +143,112 @@ The variables of the model are:
 \end{itemize}
 
 Note that $\mu_j$ and $\Sigma_j$ can depend on $A$ thus no analytical solution can be found (in contrast to the LDA method). In order to find estimators for those parameters Kumar\cite{kumar.1997} uses the maximum log-likelihood method and find two different solutions depending on the type of $\Sigma_j^p$.
+To estimate the parameters found, a numerical-optimisation method is required.
 
 \subsubsection{Full-rank $\Sigma_j^p$}
 
-%gary
+The Log-likelihood of the data $L_F = \sum\limits_{i = 1}^N log P(x_i)$ under the linear transformation $A$ and under the constrained Gaussian model assumption for each class is:
+$$\begin{array}{cl}
+  Log L_F(\mu_j, \Sigma_j, A; \{x_i\}) = & - \frac{1}{2} \sum\limits_{i = 1}^N\{(A^T x_i - \mu_{g(i)})^T\Sigma_{g(i)}^{-1}
+  (A^T x_i - \mu_{g(i)}) \\
+  & + Log((2\pi)^n|\Sigma_{g(i)}|)\} + Log|A|
+\end{array}$$
+
+Maximizing the Log-likelihood, knowing that there is a lot of parameters is very time consuming.
+First, the values of the mean and variance parameters that maximize the log-likelihood with a fixed linear transformation $A$ are estimated.
+This estimations are found by calculating the partial derivation of the log-likelihood equation. The maximum estimated values are the point where the partial derivatives are zero. \\
+The mean and variance estimates are:
+$$
+\begin{array}{cc}
+  \frac{\partial Log L_F(\mu_j, \Sigma_j, A; \{x_i\})}{\partial \mu_j} \Rightarrow \left \{
+  \begin{array}{ccc}
+    \hat\mu_j^p & = & A_p^T\bar{X_j} ,\; j = 1...J\\
+    \hat\mu_0 & = & A_{n - p}^T\bar{X}
+  \end{array}
+  \right . \\
+  \frac{\partial Log L_F(\mu_j, \Sigma_j, A; \{x_i\})}{\partial \Sigma_j} \Rightarrow \left \{
+  \begin{array}{ccc}
+    \hat\Sigma_j^p & = & A_p^T\bar{W_j}A_p, \; j = 1...J\\
+    \hat\Sigma^{n - p} & = & A_{n - p}^T\bar{T}A_{n - p}
+  \end{array}
+  \right .
+\end{array}$$
+
+The substitution of this estimated values in the Log-likelihood equation in order to maximize $A$ gives:
+$$
+\begin{array}{cl}
+  Log L_F(A; \{x_i\}) = & \frac{-N n}{2}Log(2\pi)-\frac{N}{2}Log|(A_{n - p}^T\bar{T}A_{n - p})| \\
+  & - \sum\limits_{j = 1}^J
+  \frac{N_j}{2}Log|(A_p^T\bar{W_j}A_p)| \\
+  & - \frac{1}{2}\sum\limits_{j = 1}^J\sum\limits_{g(i) = j} ((x_i - \bar{X_j})^TA_p(A_p^T\bar{W_j}A_p)^{-1}
+  A_p^T(x_i - \bar{X_j})) \\
+  & - \frac{1}{2}\sum\limits_{j = 1}^J\sum\limits_{g(i) = j} ((x_i - \bar{X})^TA_{n - p}(A_{n - p}^T\bar{T}A_{n - p})^{-1}
+  A_{n - p}^T(x_i - \bar{X})) + N Log|A|
+  \end{array}$$
+
+The simplification of $L_F(A, \{x_i\})$ and it's maximization gives:
+$$ \hat{A_F} = argmax_A\{-\frac{N}{2}Log|(A_{n - p}^T\bar{T}A_{n - p})| - \sum\limits_{j = 1}^J\frac{N_j}{2}Log|(A_p^T\bar{W_j}A_p)|
++ N Log|A|\}$$
+
+$\hat{A_F}$ can be computed by a numerical-optimisation method.
+To perform a dimension reduction transformation, we use only the first p columns of $\hat{A_F}$.
 
 \subsubsection{Diagonal $\Sigma_j^p$}
+Assuming the within-class covariance matrix to be diagonal, the calculus becomes easier.
+From now, the matrix $\Sigma_j$ are supposed to be diagonal and the diagonal elements will be called $\{\sigma_j^1...\sigma_j^p,
+\sigma^{p + 1}...\sigma^n\}$
+Note that when all $\Sigma_j$ are equals, the result is the same than the LDA one.
 
-%gary
+In this case, the log-likelihood of the data can be written as:
+$$
+\begin{array}{cl}
+  Log L_D(\mu_j, \Sigma_j, A; \{x_i\}) = & -\frac{N n}{2} Log (2\pi) + N Log|A| - \frac{N}{2}\sum\limits_{k = p + 1}^n Log|\sigma^k| \\
+  & - \sum\limits_{j = 1}^J \frac{N_j}{2} \sum\limits_{k = 1}^p Log|\sigma_j^k| - \frac{1}{2}\sum\limits_{j = 1}^J\sum\limits_{g(i) = j}
+  \sum\limits_{k = 1}^p \frac{(\vec{A_k^T} - \mu_{j,k})^2}{\sigma_j^k} \\
+  & + \frac{1}{2}\sum\limits_{j = 1}^J\sum\limits_{g(i) = j}
+  \sum\limits_{k = p + 1}^p \frac{(\vec{A_k^T} - \mu_{0,k})^2}{\sigma^k}
+\end{array}
+$$
 
-Note that when considering equals $\Sigma_j$ are the same as the LDA.
+Using the same method than before to maximize $\mu_j$ and $\Sigma_j$
 
-\subsubsection{Computing $\hat \theta$}
+$$
+\begin{array}{cc}
+  \frac{\partial Log L_D(\mu_j, \Sigma_j, A; \{x_i\})}{\partial \mu_j} & \Rightarrow \left \{
+  \begin{array}{ccc}
+    \hat\mu_j^p & = & A_p^T\bar{X_j} ,\; j = 1...J\\
+    \hat\mu_0 & = & A_{n - p}^T\bar{X}
+  \end{array}
+  \right . \\
+  \frac{\partial Log L_D(\mu_j, \Sigma_j, A; \{x_i\})}{\partial \Sigma_j} & \Rightarrow \left \{
+  \begin{array}{ccc}
+    \hat\Sigma_j^p & = & Diag(A_p^T\bar{W_j}A_p), \; j = 1...J\\
+    \hat\Sigma^{n - p} & = & Diag(A_{n - p}^T\bar{T}A_{n - p})
+  \end{array}
+  \right .
+\end{array}
+$$
 
-%gary
+After substitution in the main equation:
+$$
+\begin{array}{cl}
+  Log L_D(A; \{x_i\}) = & - \frac{N n}{2} Log(2\pi) - \frac{N}{2} Log|Diag(A_{n - p}^T\bar{T}A_{n - p})| \\
+  & - \sum\limits_{j = 1}{J}\frac{N_j}{2} Log|Diag(A_p^T\bar{W_j}A_p)| \\
+  & - \frac{1}{2} \sum\limits_{j = 1}^J \sum\limits_{g(i) = j} ((x_i - \bar{X} )^T A_{n - p} Diag( A_{n - p}^T \bar{T} A_{n - p} )^-1 A_p^T(x_i - \bar{X}))\\
+  & + N Log |A|
+\end{array}
+$$
 
-%%   L(\{x_i\}; A; \{\mu_j, \Sigma_j\}) & = & \sum\limits_{j=1}^{C}\sum_{i=1}{N_j} log p_j x_i^{(j)}\\
-%%                                      & = & \sum\limits_{j=1}^{C}\sum_{i=1}{N_j} [\frac{1}{2} log (\frac{(\mid A \mid)^2}{(2\pi)^n \product_{k=1}^n
-%% \end{array}$$
+After the simplification of $Log L_D(A; \{x_i\})$ and it's maximisation:
+$$
+\hat{A_D} = argmax_A\{-\frac{N}{2} Log|Diag(A_{n - p}^T \bar{T} A_{n - p})| - \sum\limits_{j = 1}^J \frac{N_j}{2} Log|Diag(A_{n - p}^T \bar{W_j} A_{n - p})| + N Log|A|\}
+$$
+
+$\hat{A_D}$ can be computed by a numerical-optimisation method.
+To perform a dimension reduction transformation, we use only the first p columns of $\hat{A_D}$.
+
+\subsubsection{Computing $\hat A$}
+
+Now that the equations of $\hat{A_F}$ and $\hat{A_D}$ are defined, their values are calculated by numerical-optimization methods.
+All methods that allow to find a maximum/minimum in a function will work.
+Kumar\cite{kumar.1997} uses a Gradient descent algorithm to perform the calculation.
