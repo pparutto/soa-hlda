@@ -1,4 +1,3 @@
-
 \section{Variants of the HLDA}
 \label{sec:variants}
 
@@ -31,6 +30,35 @@ $\Sigma_{wc}$ is the one computed by the LDA.
 
 So it is clear that if $\propto$ is 1, the SHLDA is a HLDA, and if it
 is equal to 1 it is a LDA.
+
+\subsection{Diagonal Block HLDA}
+\label{sec:db-hlda}
+
+The HLDA is a very time consuming method. Performing it on real data set can be impossible as the data number of dimensions can be very high.
+So an extension of the HLDA is to divide the research of $\hat{A}$ into independant subproblems.
+This method is called Diagonal Block HLDA\cite{zhang2011}
+$$
+\hat{A} = \left [
+\begin{array}{ccc}
+\hat{A}^{1} \\
+& \ddots \\
+& & \hat{A}^{N}
+\end{array}
+\right ]
+$$
+
+With $\hat{A}^l, \; l = 1...N$ a subproblem to solve.
+and $\hat{A}^l = argmax_{A_l}L^l (A^l; \{x_i\}^l)$
+
+The equation for $L$ is:
+$$
+\begin{array}{cl}
+  L(A; \{x_i\}) & = \sum\limits_{j = 1}^J \frac{I_j}{2} \sum\limits_{n = 1}^N Log \left ( \frac{|A^n|^2}{|Diag(A_{U^n}^n W_j^n (A_{U^n}^n)^T)||Diag(A_{M - U^n}^n T^n (A_{M - U^n}^n)^T)|} \right ) \\
+  & = \sum\limits_{n = 1}^N L^n ( A^n; \{x_i^n\})
+\end{array} 
+$$
+
+Each problem can be solved independantly.
 
 %%% Local Variables:
 %%% mode: latex
