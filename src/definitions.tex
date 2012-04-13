@@ -12,15 +12,13 @@ Then we will analyze how the HLDA is an extension of these bases.
 
 \subsection{Theory}
 
-We suppose that we have a database in which are store vectors that are grouped in classes.
-The main goal of the multiclass LDA is to find a predictor that will allow to find the class that best
-correspond to a sample X.
+The main goal of the multiclass LDA is to find a predictor that will allow to find the class that best correspond to a sample X.
 In order to do that, we need to find a separator and each class will be projected on it.
 The main goal is to find the best separator, so for a sample X, it will be easy to find which class
 best correspond to X.
 In a second time, it is possible to perform a dimension reduction on the separator.
 
-To summurize, the LDA has two objectives:
+To summarize, the LDA has two objectives:
 - Find a separator that will allow a sample to be classified.
 - Perform a dimension reduction to classify faster.
 
@@ -28,49 +26,94 @@ Now we will explain how the multiclass LDA works.
 
 \subsubsection{Multiclass LDA}
 
-We suppose that we have a set of sample in EXPRESSION(n) dimension, labelized by their respective
+We suppose that we have a set of sample in $n$ dimension, labelized by their respective
 class.
-We suppose that the covariance matrix EXPRESSION(SIGMA) of all class is the same (homoscedasticity)
-The mean of each class is notated EXPRESSION(MU).
-The number of different classes is EXPRESSION(C).
+We suppose that the covariance matrix $\Sigma$ of all class is the same (homoscedasticity)
+The mean of each class is notated $\nu$.
+The number of different classes is $C$.
 
 We want to find the class that best correspond to a vector x.
 In order to easily differenciate classes, we need:
-- Each projected sample of the same class should be very close: we will call this the within-class ratio.
-- The distance between each class data set projection should be very large: we will call this the between-class ratio.
 
-We will try to find the smallest within-class ratio and the biggest between-class ratio in order to best
-isolate each class.
+\begin{enumerate}
+\item Each projected sample of the same class should be very close: we will call this the within-class ratio $S_W$.
+\item The distance between each class data should be very large: we will call this the between-class ratio $S_B$.
+\end{enumerate}
+
+We will try to find the smallest within-class ratio and the biggest between-class ratio in order to best isolate each class.
+
 So the function that we want to maximize is:
-EXPRESSION( S = w' Sb w / w' Sw w)
+$$S = \frac{w^t S_B w}{w^t S_W w}$$
 with:
-S the ration to maximize
-Sb the between-class ratio
-Sw the within-class ratio
-w the a projection vector 
+\begin{itemize*}
+  \item $S$ the ratio to maximize
+  \item $S_B$ the between-class ratio
+  \item $S_W$ the within-class ratio
+  \item $w$ the projection matrix
+\end{itemize*}
 
-The expressions of Sb and Sw in the multiclass LDA case are:
-Sb = (1 / C) * SUM(1 => C) (MUi - MU)(MUi - MU)'
-Sw = (1 / C) * SUM(1 => C) SUM(x - MUi)(X - MUi)'
+The expressions of $S_B$ and $S_W$ for the multiclass LDA are:
+$$S_B = \frac{1}{C} * \sum\limits_{i = 1}^C (\mu_i - \mu)(\mu_i - \mu)^t$$
+$$S_W = \frac{1}{C} * \sum\limits_{i = 1}^C \sum\limits_{\forall x \in C_i} (x - \mu_i)(x - \mu_i)^t$$
 With:
-MU the mean of the class means
-and MUi the mean of the ith class
+\begin{itemize*}
+  \item $\mu$ the mean of the class means
+  \item $\mu_i$ the mean of the ith class
+\end{itemize*}
 
-We then want to find W that maximize S.
-We will call this special W, W*
-Knowing that the best W* that we can choose in a two class separation is:
-W* = Sw-1(MU1 - MU2)
+For a multicall LDA, the best projection matrix for the ith dimension satisfy the equation:
+$$(S_B - \lambda_i S_W)w_{i}^* = 0$$
 
-We can extend this expression to the multiclass case:
-(Sb - LiSw)Wi* = 0
-
-This means that the projections with the maximum class separability information are
-the eigenvectors corresponding to the largest eigenvalues of Sw-1Sb.
+This means that the projections with the maximum class separability information are the eigenvectors corresponding to the largest eigenvalues of $S_{W}^{-1} S_B$.
 
 \subsubsection{HLDA}
 
-The linear discriminant analysis is based on the fact that the Covariance Matrix of
-each class is the same. This is called homoscedasticity.
-The difference between the LDA and the HLDA is that the second one is not based on the
-homoscedasticity.
-The HLDA suppose that the covariance matrix of each class is different.
+HLDA (Heteroscedastic Linear Discriminant Analysis) is another method to find a linear transformation mapping the problem space into a smaller one.
+
+As in the previous section, let $x$ be a sample of dimension $n$ and consider $C$ classes. Then the HLDA find the projection matrix A such that:
+$$y = Ax$$
+with y a $p$ dimensions variable and $p < n$.\\
+
+The purpose of the HLDA method is to release the homoscedasticiy constraint of the LDA, allowing different variances between classes. The two assumptions made by the method are:
+
+\begin{enumerate}
+  \item The class distributions are $n$ dimensional Gaussian distributions.
+  \item This space of size $n$ can be splitted into two subspaces of size $p$
+    and $n - p$ (with p < n). The first one is different for all classes and contains meaningful information while the second one is the same for the whole dataset and contains only noise.
+\end{enumerate}
+
+The projection matrix A can then be rewrited following those assumptions:
+$$A = \left [
+  \begin{array}{c}
+    A_p\\
+    A_{n-p}
+  \end{array}
+\right ]
+$$
+
+it is also possible to find an expression for the mean and variance of each classes:
+$$\mu_j =
+\left [
+  \begin{array}{c}
+    \mu_{j,p}\\
+    \mu_{0,(n-p)}
+  \end{array}
+\right ]
+$$
+
+$$\Sigma_j =
+\left [
+  \begin{array}{cc}
+    \Sigma_j^p & 0\\
+    0 & \Sigma_0^{(n-p)}\\
+  \end{array}
+\right ]
+$$
+
+Finally the Gaussian probability density function for this transformation is:
+$$P(y_i) = \frac{\mid \theta \mid}{\sqrt{(2\pi)^n \mid \Sigma_{g(i)} \mid}}
+    e^{-\frac{1}{2} (y_i - \mu_{g(i)})^t \Sigma_{g(i)}^{-1} (y_i - \mu_{g(i)})}$$
+With $g(i)$ the function associating each sample with its label.
+
+No straightforward analytical solution can be found to this equation as $\mu_j$ and $\Sigma_j$ may depend on A. In order to find A, the log-maximum likelihood method is used:
+%$$L(\{x_i\}; A; \{\mu_j, \Sigma_j\}) = \sum\limits_{j=1}^{C} \sum_{i=1}{N_j}

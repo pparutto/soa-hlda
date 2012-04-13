@@ -1,6 +1,5 @@
-% %hlda classifier
-% 
-% %reduce the number of dimensions
+%bench script
+
 pca_tmp = pcacov(cov(double(train)));
 pca_A = pca_tmp(:,1:250);
 
@@ -31,15 +30,15 @@ end
 %This is the number of iterations asked
 nb_iter = 1;
 
-%compute the LDA matrix
-%good_A = lda(pca_train, LABEL_TRAIN, 9, 250);
+tabplot = cell(20,1);
+for nbdim = 1:20
 
-%This is the initialization matrix
-A = shlda (eye(size(general_cov)), wanted_dim, 0.25, general_cov, within_cov, num_samples, nb_iter);
-%A = hlda (good_A, wanted_dim, general_cov, within_cov, num_samples, nb_iter);   
-for i = 0:9
-   indx=find(LABEL_TRAIN == i);
-    hlda_centres(i+1,:) = mean(pca_train(indx,:)) * A(:,1:wanted_dim);
+    A = hlda (eye(size(general_cov)), nbdim, general_cov, within_cov, num_samples, nb_iter);
+
+    for i = 0:9
+        indx=find(LABEL_TRAIN == i);
+        hlda_centres(i+1,:) = mean(pca_train(indx,:)) * A;
+    end
+
+    tabplot{nbdim,1} = test_classif(pca_test * A, LABEL_TEST, hlda_centres)
 end
-
-test_classif(pca_test * A(:,1:wanted_dim), LABEL_TEST, hlda_centres)
