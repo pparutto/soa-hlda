@@ -27,10 +27,39 @@ by the user.
 \paragraph{Number of meaningful dimensions} The principal parameter to find is the number of dimension kept
 by the algorithm, called $p$.
 
-\begin{center}
+\begin{figure}[H!]
   \includegraphics[scale=0.75]{img/bench-classes}
-\end{center}
+  \caption{Variation of the $p$ parameter}
+  \label{img:classes}
+\end{figure}
 
-Interestingly the best classification ratio happens for $p = 9$ that
+Interestingly figure \ref{img:classes} shows that the best classification ratio happens for $p = 9$ which
 is exactly the number of dimensions kept by the LDA. Furthermore the farther we get from
 it the worst the classification value get.
+
+\paragraph{Convergence issue} The current implementation of the HLDA does not converge toward a better
+solution but toward a worst one.
+
+\begin{figure}[H!]
+  \includegraphics[scale=0.75]{img/bench-iterations}
+  \caption{Variation of number of iteration for the numerical aproximation}
+  \label{img:iter}
+\end{figure}
+
+Figure \ref{img:iter} shows that as the number of iterations increase, the classification ratio decrease.
+
+\paragraph{Points separation} To visualize the effect of the tested method on the data-set we present a plot
+of the first two coordinates for each samples. In Figure \ref{img:classif} each point has a color corresponding to its
+class.
+
+\begin{center}
+\begin{figure}[H!]
+  \includegraphics[scale=0.30]{img/classif}
+  \caption{Classification results}
+  \label{img:iter}
+\end{figure}
+\end{center}
+
+The PCA as expected show a very poor separation between classes wherease the LDA and HLDA
+methods class are better separated. The results for the HLDA are not as good as expected,
+maybe due to implementation issues.

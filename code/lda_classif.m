@@ -1,12 +1,12 @@
 %classification for the LDA
 
-%A = lda(double(train), LABEL_TRAIN, 9);
+lda_A = lda(double(train), LABEL_TRAIN, 9);
 
 for i = 0:9
    indx=find(LABEL_TRAIN == i);
-    centres(i+1,:) = mean(train(indx,:)) * A;
+    centres(i+1,:) = mean(train(indx,:)) * lda_A;
 end
 
-new_test = double(test) * A;
+lda_test = double(test) * lda_A;
 
-test_classif(new_test, LABEL_TEST, centres)
+test_classif(lda_test, LABEL_TEST, centres)
