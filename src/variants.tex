@@ -1,0 +1,25 @@
+
+\section{Variants of the HLDA}
+\label{sec:variants}
+
+There is several variants of the HLDA. We present them briefly.
+
+First we will present a method which is a combination of the LDA and
+the HDLA. In a second time, we present a method which allows to make our
+computation faster.
+
+\subsection{Smooth HLDA}
+\label{sec:smooth-hlda}
+
+If the HLDA works on a lot of classes, the estimation of the class
+covariance becomes noisy. The LDA doesn't have this problem because
+the within-class covariance matrix is the same for all the classes.
+
+So, what is the solution when there is a lot of classes and the data
+are not homoscedastics ? Burget\cite{burget.2004} presents a smooth LDA.
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../hlda"
+%%% End:
