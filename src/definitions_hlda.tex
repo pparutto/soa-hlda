@@ -6,7 +6,7 @@ HLDA (Heteroscedastic Linear Discriminant Analysis) is another method to find a 
 
 The HLDA finds the projection matrix A such that:
 $$y = Ax$$
-with y a $p$ dimensions variable and $p < n$.\\
+with $y$ a $p$-dimensions variable and $p < n$.\\
 
 The purpose of the HLDA method is to release the homoscedasticiy constraint of the LDA, allowing different variances for each classes. The two assumptions made by the method are:
 
@@ -52,8 +52,7 @@ Based on those definitions, it is possible to define a model representing the ne
 The Gaussian probability density function for this model is:
 $$P(y_i) = \frac{\mid \theta \mid}{\sqrt{(2\pi)^n \mid \Sigma_{g(i)} \mid}}
 e^{-\frac{1}{2} (y_i - \mu_{g(i)})^t \Sigma_{g(i)}^{-1} (y_i - \mu_{g(i)})}$$
-With $g(i)$ the function associating each sample with its label.
-
+With $g(i)$ the function associating each sample with its label.\\
 The variables of the model are:
 \begin{itemize}
   \item $A$: the projection matrix
@@ -75,7 +74,7 @@ $$\begin{array}{cl}
 
 Maximizing the Log-likelihood, knowing that there is a lot of parameters is very time consuming.
 First, the values of the mean and variance parameters that maximize the log-likelihood with a fixed linear transformation $A$ are estimated.
-This estimations are found by calculating the partial derivation of the log-likelihood equation. The maximum estimated values are the point where the partial derivatives are zero. \\
+These estimations are found by calculating the partial derivation of the log-likelihood equation. The maximum estimated values are the point where the partial derivatives are zero. \\
 The mean and variance estimates are:
 $$
 \begin{array}{cc}
@@ -93,7 +92,7 @@ $$
   \right .
 \end{array}$$
 
-The substitution of this estimated values in the Log-likelihood equation gives:
+The substitution of this estimated values in the Log-likelihood equation give:
 $$
 \begin{array}{cl}
   Log L_F(A; \{x_i\}) = & \frac{-N n}{2}Log(2\pi)-\frac{N}{2}Log|(A_{n - p}^T\bar{T}A_{n - p})| \\
@@ -115,7 +114,7 @@ To perform a dimension reduction transformation, we use only the first p columns
 \subsubsection{Diagonal $\Sigma_j^p$}
 Assuming the within-class covariance matrix to be diagonal, the calculus becomes easier.
 From now, the matrix $\Sigma_j$ are supposed to be diagonal and their diagonal elements will be called $\{\sigma_j^1...\sigma_j^p,
-\sigma^{p + 1}...\sigma^n\}$
+\sigma^{p + 1}...\sigma^n\}$.
 Note that when all $\Sigma_j$ are equals, the result is the same than the LDA one.
 
 In this case, the log-likelihood of the data can be written as:
