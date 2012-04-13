@@ -16,8 +16,21 @@ covariance becomes noisy. The LDA doesn't have this problem because
 the within-class covariance matrix is the same for all the classes.
 
 So, what is the solution when there is a lot of classes and the data
-are not homoscedastics ? Burget\cite{burget.2004} presents a smooth LDA.
+are not homoscedastics ? Burget\cite{burget.2004} presents a smooth
+LDA. It is a combination of the LDA and the HLDA and it tries to get
+the advantages of the two methods.
 
+In this, we estimate the class covariance matrix as:
+
+$$\breve\Sigma^{\left( j\right) }=\propto \hat\Sigma^{\left( j\right) } +\left( 1- \propto\right) \Sigma_{wc}$$
+
+Where $\breve\Sigma^{\left( j\right) }$ is the smoothed estimated
+covariance for the class $j$ used by the HLDA.
+$\hat\Sigma^{\left(j\right) }$ is the covariance computed by the HLDA, and
+$\Sigma_{wc}$ is the one computed by the LDA.
+
+So it is clear that if $\propto$ is 1, the SHLDA is a HLDA, and if it
+is equal to 1 it is a LDA.
 
 %%% Local Variables:
 %%% mode: latex
