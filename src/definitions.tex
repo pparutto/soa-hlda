@@ -11,14 +11,14 @@ Then we will analyze how the HLDA is an extension of these bases.
 
 \subsection{Notations}
 
-The following notations are used throughout the rest of the document:
+The following notations are used through the rest of the document:
 
 \begin{itemize*}
   \item Let $X_i$, $i \in \llbracket 1 \ldots N \rrbracket$ be a $n$-dimensional vector corresponding to a sample.
   \item We consider $J$ classes and refer to a class by $C_j$, $j \in \llbracket 1 \ldots J \rrbracket$
   \item The number of samples in a class is given by $N_j$, $j \in \llbracket 1 \ldots J \rrbracket$
   \item The notation $X_i^{(j)}$, $j \in \llbracket 1 \ldots J \rrbracket$, $i \in \llbracket 1 \ldots N_j \rrbracket$
-    represents the ith sample of the jth class
+    represents the $i^{th}$ sample of the $j^{th}$ class
   \item For each classes, the mean $\mu_j$ and the covariance $\Sigma_j$ are defined as:
     $$\mu_j = \frac{1}{N_j}\sum\limits_{i = 1}^{N_j} X_i^{(j)}$$
     $$\Sigma_j = \frac{1}{N_j}\sum\limits_{i = 1}^{N_j} (X_i^{(j)} - \mu_j)(X_i^{(j)} - \mu_j)^t$$
@@ -38,8 +38,11 @@ best correspond to X.
 In a second time, it is possible to perform a dimension reduction on the separator.
 
 To summarize, the LDA has two objectives:
-- Find a separator that will allow a sample to be classified.
-- Perform a dimension reduction to classify faster.
+
+\begin{enumerate}
+\item - Find a separator that will allow a sample to be classified.
+\item - Perform a dimension reduction to classify faster.
+\end{enumerate}
 
 Now we will explain how the multiclass LDA works. 
 
@@ -50,7 +53,7 @@ In order to easily differentiate classes, we need:
 
 \begin{enumerate}
 \item Each projected sample of the same class should be very close: we will call this the within-class ratio $S_W$.
-\item The distance between each class data should be very large: we will call this the between-class ratio $S_B$.
+\item The distance between each class projected data should be very large: we will call this the between-class ratio $S_B$.
 \end{enumerate}
 
 We will try to find the smallest within-class ratio and the biggest between-class ratio in order to best isolate each class.
@@ -65,7 +68,7 @@ with:
   \item $w$ the projection matrix
 \end{itemize*}
 
-Welling\cite{welling} demonstrates that the expressions of $S_B$ and $S_W$ for the multiclass LDA are:
+Welling\cite{welling} shows that the expressions of $S_B$ and $S_W$ for the multiclass LDA are:
 $$S_B = \frac{1}{C} * \sum\limits_{i = 1}^C (\mu_i - \mu)(\mu_i - \mu)^t$$
 $$S_W = \frac{1}{C} * \sum\limits_{i = 1}^C \sum\limits_{\forall x \in C_i} (x - \mu_i)(x - \mu_i)^t$$
 With:
@@ -74,7 +77,7 @@ With:
   \item $\mu_i$ the mean of the ith class
 \end{itemize*}
 
-For a multiclass LDA, the best projection matrix for the ith dimension satisfy the equation:
+For a multiclass LDA, the best projection matrix for the $i^{th}$ dimension satisfy the equation:
 $$(S_B - \lambda_i S_W)w_{i}^* = 0$$
 
 Gutierrez-Osuna\cite{gutierrez.osuna} explains that the projections with the maximum class separability information are the eigenvectors corresponding to the largest eigenvalues of $S_{W}^{-1} S_B$.

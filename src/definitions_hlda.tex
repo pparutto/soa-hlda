@@ -8,7 +8,7 @@ The HLDA finds the projection matrix A such that:
 $$y = Ax$$
 with y a $p$ dimensions variable and $p < n$.\\
 
-The purpose of the HLDA method is to release the homoscedasticiy constraint of the LDA, allowing different variances between classes. The two assumptions made by the method are:
+The purpose of the HLDA method is to release the homoscedasticiy constraint of the LDA, allowing different variances for each classes. The two assumptions made by the method are:
 
 \begin{enumerate}
   \item The class distributions are $n$-dimensional Gaussian distributions.
@@ -45,7 +45,7 @@ $$\Sigma_j =
 $$
 Where $\mu_0$ and $\Sigma_0$ are supposed to be common to all classes.
 
-Based on those definition, it is possible to define a model representing the new dataset.
+Based on those definitions, it is possible to define a model representing the new dataset.
 
 \subsubsection{HLDA Gaussian Model}
 
@@ -93,7 +93,7 @@ $$
   \right .
 \end{array}$$
 
-The substitution of this estimated values in the Log-likelihood equation in order to maximize $A$ gives:
+The substitution of this estimated values in the Log-likelihood equation gives:
 $$
 \begin{array}{cl}
   Log L_F(A; \{x_i\}) = & \frac{-N n}{2}Log(2\pi)-\frac{N}{2}Log|(A_{n - p}^T\bar{T}A_{n - p})| \\
@@ -114,7 +114,7 @@ To perform a dimension reduction transformation, we use only the first p columns
 
 \subsubsection{Diagonal $\Sigma_j^p$}
 Assuming the within-class covariance matrix to be diagonal, the calculus becomes easier.
-From now, the matrix $\Sigma_j$ are supposed to be diagonal and the diagonal elements will be called $\{\sigma_j^1...\sigma_j^p,
+From now, the matrix $\Sigma_j$ are supposed to be diagonal and their diagonal elements will be called $\{\sigma_j^1...\sigma_j^p,
 \sigma^{p + 1}...\sigma^n\}$
 Note that when all $\Sigma_j$ are equals, the result is the same than the LDA one.
 
@@ -169,5 +169,5 @@ To perform a dimension reduction transformation, we use only the first p columns
 \subsubsection{Computing $\hat A$}
 
 Now that the equations of $\hat{A_F}$ and $\hat{A_D}$ are defined, their values are calculated by numerical-optimization methods.
-All methods that allow to find a maximum/minimum in a function will work.
+All methods that allow to find a maximum/minimum values in a function could work.
 Kumar\cite{kumar.1997} uses a Gradient descent algorithm to perform the calculation.
