@@ -8,14 +8,18 @@
 \section{Introduction}
 \label{sec:introduction}
 
-In this state of the art, we will present a reduction-dimension method
-which is a generalization of the LDA. There is several hypothesis to
-be able to apply the LDA. We will present a case where we are
-limited because all the hypothesis are not respected. And we will
-introduce a method which is able to solve this kind of problem. This
-method is the ``Heteroscedastic Linear Discriminant Analysis'' (HLDA).
+In this state of the art, we present a dimension reduction method
+which is a generalization of the Linear Discriminant Analysis(LDA).
+One main flaws of the LDA method
+is that it discriminates classes only by their mean and do not take into
+account their variances. The Heteroscedastic Linear Discriminant Analysis (HLDA)
+method relaxes this constraint to the price of a more complex solution
+(not analytical anymore). Throughout the sections, the differences between LDA and
+HLDA are emphasized.
 
-FIXME: I need to know the exact plan to know what to say here...
+This document is structured as follow: the first part quickly review the LDA method,
+then the second part describe the HLDA method. In the third part some benchemarks
+are presented. Finally the fourth part presents some variants of the HLDA and concludes.
 
 \subsection{Limitations of the LDA}
 \label{sec:limitations-lda}
