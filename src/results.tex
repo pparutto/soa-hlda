@@ -7,12 +7,12 @@
 
 The results presented in this section has been obtained on the MNIST database.
 Each sample is encoded as a vector of 784 dimensions corresponding to a $28 \times 28$
-pixels image. Each image represent a handwritten digit from 0 to 9, defining 9 different
+pixels image. Each image represents a handwritten digit from 0 to 9, defining 9 different
 classes.
 The train dataset is composed of 60000 images and the test dataset of 10000.\\
 
 The classifier used for the benchmark is simply a nearest mean classifier.
-It associate to a sample the class that minimize the square distance between the class mean and
+It associates to a sample the class that minimize the square distance between the class mean and
 the sample mean.\\
 
 {\bf Note:} Because of memory consumption issues, the HLDA algorithm is
@@ -37,12 +37,12 @@ Interestingly figure \ref{img:classes} shows that the best classification ratio 
 is exactly the number of dimensions kept by the LDA. Furthermore the farther we get from
 it the worst the classification value get.
 
-\paragraph{Convergence issue} The current implementation of the HLDA does not converge toward a better
+\paragraph{Convergence problem} The current implementation of the HLDA does not converge toward a better
 solution but toward a worst one.
 
 \begin{figure}[H!]
   \includegraphics[scale=0.75]{img/bench-iterations}
-  \caption{Variation of number of iteration for the numerical aproximation}
+  \caption{Variation of number of iteration for the numerical approximation}
   \label{img:iter}
 \end{figure}
 
@@ -55,11 +55,11 @@ class.
 \begin{center}
 \begin{figure}[H!]
   \includegraphics[scale=0.30]{img/classif}
-  \caption{Classification results}
-  \label{img:iter}
+  \caption{Classification results, from left to right: PCA, LDA, HLDA}
+  \label{img:classif}
 \end{figure}
 \end{center}
 
-The PCA as expected show a very poor separation between classes wherease the LDA and HLDA
-methods class are better separated. The results for the HLDA are not as good as expected,
+The PCA as expected shows a very poor separation between classes whereas the LDA and HLDA
+methods better separates classes. The results for the HLDA are not as good as expected,
 maybe due to implementation issues.
