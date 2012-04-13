@@ -1,16 +1,35 @@
 % *** Théorie
 % *** Exemples d'applications
 
-\section{Definitions}
+\section{Methods}
 \label{sec:definitions}
 
 The HLDA is an extension of the multiclass LDA.
-It's goal is to allow heteroscediscity: The classes respective Covariance matrix
-can be different.
+It's goal is to allow heteroscediscity: The classes respective Covariance matrix can be different.
 First, we will explain the bases of the LDA.
 Then we will analyze how the HLDA is an extension of these bases.
 
-\subsection{Theory}
+\subsection{Notations}
+
+The following notations are used throughout the rest of the document:
+
+\begin{itemize*}
+  \item Let $X_i$, $i \in \llbracket 1 \ldots N \rrbracket$ be a $n$-dimensional vector corresponding to a sample.
+  \item We consider $J$ classes and refer to a class by $C_j$, $j \in \llbracket 1 \ldots J \rrbracket$
+  \item The number of samples in a class is given by $N_j$, $j \in \llbracket 1 \ldots J \rrbracket$
+  \item The notation $X_i^{(j)}$, $j \in \llbracket 1 \ldots J \rrbracket$, $i \in \llbracket 1 \ldots N_j \rrbracket$
+    represents the ith sample of the jth class
+  \item For each classes, the mean $\mu_j$ and the covariance $\Sigma_j$ are defined as:
+    $$\mu_j = \frac{1}{N_j}\sum\limits_{i = 1}^{N_j} X_i^{(j)}$$
+    $$\Sigma_j = \frac{1}{N_j}\sum\limits_{i = 1}^{N_j} (X_i^{(j)} - \mu_j)(X_i^{(j)} - \mu_j)^t$$
+  \item Finally the mean and covariance of the full dataset are defined as:
+    $$\mu = \frac{1}{N}\sum\limits_{i = 1}^{N} X_i$$
+    $$\Sigma = \frac{1}{N}\sum\limits_{i = 1}^{N_j} (X_i - \mu)(X_i - \mu)^t$$
+\end{itemize*}
+
+\subsection{Multiclass LDA}
+
+\subsubsection{Purpose}
 
 The main goal of the multiclass LDA is to find a predictor that will allow to find the class that best correspond to a sample X.
 In order to do that, we need to find a separator and each class will be projected on it.
@@ -24,16 +43,10 @@ To summarize, the LDA has two objectives:
 
 Now we will explain how the multiclass LDA works. 
 
-\subsubsection{Multiclass LDA}
-
-We suppose that we have a set of sample in $n$ dimension, labelized by their respective
-class.
-We suppose that the covariance matrix $\Sigma$ of all class is the same (homoscedasticity)
-The mean of each class is notated $\nu$.
-The number of different classes is $C$.
+\subsubsection{Methodology}
 
 We want to find the class that best correspond to a vector x.
-In order to easily differenciate classes, we need:
+In order to easily differentiate classes, we need:
 
 \begin{enumerate}
 \item Each projected sample of the same class should be very close: we will call this the within-class ratio $S_W$.
@@ -61,28 +74,30 @@ With:
   \item $\mu_i$ the mean of the ith class
 \end{itemize*}
 
-For a multicall LDA, the best projection matrix for the ith dimension satisfy the equation:
+For a multiclass LDA, the best projection matrix for the ith dimension satisfy the equation:
 $$(S_B - \lambda_i S_W)w_{i}^* = 0$$
 
 This means that the projections with the maximum class separability information are the eigenvectors corresponding to the largest eigenvalues of $S_{W}^{-1} S_B$.
 
-\subsubsection{HLDA}
+\subsection{HLDA}
+
+\subsubsection{Differences between LDA and HLDA}
 
 HLDA (Heteroscedastic Linear Discriminant Analysis) is another method to find a linear transformation mapping the problem space into a smaller one.
 
-As in the previous section, let $x$ be a sample of dimension $n$ and consider $C$ classes. Then the HLDA find the projection matrix A such that:
+The HLDA finds the projection matrix A such that:
 $$y = Ax$$
 with y a $p$ dimensions variable and $p < n$.\\
 
 The purpose of the HLDA method is to release the homoscedasticiy constraint of the LDA, allowing different variances between classes. The two assumptions made by the method are:
 
 \begin{enumerate}
-  \item The class distributions are $n$ dimensional Gaussian distributions.
-  \item This space of size $n$ can be splitted into two subspaces of size $p$
-    and $n - p$ (with p < n). The first one is different for all classes and contains meaningful information while the second one is the same for the whole dataset and contains only noise.
+  \item The class distributions are $n$-dimensional Gaussian distributions.
+  \item This space of size $n$ can be split into two subspaces of size $p$
+    and $n - p$ (with $p < n$). The first one is different for all classes and contains meaningful information while the second one is the same for the whole dataset and contains only noise.
 \end{enumerate}
 
-The projection matrix A can then be rewrited following those assumptions:
+The projection matrix A can then be rewritten following those assumptions:
 $$A = \left [
   \begin{array}{c}
     A_p\\
@@ -109,11 +124,40 @@ $$\Sigma_j =
   \end{array}
 \right ]
 $$
+Where $\mu_0$ and $\Sigma_0$ are supposed to be common to all classes.
 
-Finally the Gaussian probability density function for this transformation is:
+Based on those definition, it is possible to define a model representing the new dataset.
+
+\subsubsection{HLDA gaussian Model}
+
+The Gaussian probability density function for this model is:
 $$P(y_i) = \frac{\mid \theta \mid}{\sqrt{(2\pi)^n \mid \Sigma_{g(i)} \mid}}
     e^{-\frac{1}{2} (y_i - \mu_{g(i)})^t \Sigma_{g(i)}^{-1} (y_i - \mu_{g(i)})}$$
 With $g(i)$ the function associating each sample with its label.
 
-No straightforward analytical solution can be found to this equation as $\mu_j$ and $\Sigma_j$ may depend on A. In order to find A, the log-maximum likelihood method is used:
-%$$L(\{x_i\}; A; \{\mu_j, \Sigma_j\}) = \sum\limits_{j=1}^{C} \sum_{i=1}{N_j}
+The variables of the model are:
+\begin{itemize}
+  \item $A$: the projection matrix
+  \item $\mu_j$ the mean of class $j$
+  \item $\Sigma_j$ the covariance of class $j$
+\end{itemize}
+
+Note that $\mu_j$ and $\Sigma_j$ can depend on $A$ thus no analytical solution can be found (in contrast to the LDA method). In order to find estimators for those parameters Kumar\cite{kumar.1997} uses the maximum log-likelihood method and find two different solutions depending on the type of $\Sigma_j^p$.
+
+\subsubsection{Full-rank $\Sigma_j^p$}
+
+%gary
+
+\subsubsection{Diagonal $\Sigma_j^p$}
+
+%gary
+
+Note that when considering equals $\Sigma_j$ are the same as the LDA.
+
+\subsubsection{Computing $\hat \theta$}
+
+%gary
+
+%%   L(\{x_i\}; A; \{\mu_j, \Sigma_j\}) & = & \sum\limits_{j=1}^{C}\sum_{i=1}{N_j} log p_j x_i^{(j)}\\
+%%                                      & = & \sum\limits_{j=1}^{C}\sum_{i=1}{N_j} [\frac{1}{2} log (\frac{(\mid A \mid)^2}{(2\pi)^n \product_{k=1}^n
+%% \end{array}$$
