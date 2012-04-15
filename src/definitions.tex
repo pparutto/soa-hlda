@@ -70,7 +70,7 @@ with:
   \item $w$ the projection matrix
 \end{itemize*}
 
-Welling\cite{welling} shows that the expressions of $S_B$ and $S_W$ for the multiclass LDA are:
+Welling\cite{bishop2006pattern} shows that the expressions of $S_B$ and $S_W$ for the multiclass LDA are:
 $$S_B = \frac{1}{C} * \sum\limits_{i = 1}^C (\mu_i - \mu)(\mu_i - \mu)^t$$
 $$S_W = \frac{1}{C} * \sum\limits_{i = 1}^C \sum\limits_{\forall x \in C_i} (x - \mu_i)(x - \mu_i)^t$$
 With:
@@ -83,4 +83,3 @@ For a multiclass LDA, the best projection matrix for the $i^{th}$ dimension sati
 $$(S_B - \lambda_i S_W)w_{i}^* = 0$$
 
 Gutierrez-Osuna\cite{gutierrez.osuna} explains that the projections with the maximum class separability information are the eigenvectors corresponding to the largest eigenvalues of $S_{W}^{-1} S_B$.
-
